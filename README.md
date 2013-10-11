@@ -1,4 +1,5 @@
-bookyourself-php-client
+BookYourself-PHP-Client
 =======================
 
 PHP client for BookYourself API
+
