@@ -1,11 +1,16 @@
 <?php
 
-	$client_id = "h247Cb1hF6L73OwlqbCDCi1rvjcL27U7";
-	$client_secret = "7f8kvOsZFEzP8iXU0DFboVjVjD5ZNFHl";
-	$enviroment = "test";
-	//$enviroment = "production";
-	$redirect_uri  = "http://example.com/code";
+$client_id     = "6MaIBO9BfStxaCohRKOI5NTJJ5dQ7e7w";
+$client_secret = "1XA525eDX3FdpZ2hANhfIG5mzoaghXHr";
+$redirect_uri  = "http://phplibrary.funmoto.sk/";
+
+/*
+ * SET ONE ENVIROMENT
+ */
+
+//$enviroment = "dev"; 
+$enviroment = "test";
+//$enviroment = "production";
 
 
-   
 ?>
