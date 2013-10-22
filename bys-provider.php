@@ -4,12 +4,37 @@ require_once("config.php");
 require_once("bys-client.php");
 
 class BysProvider
-{
-    
+{ 
     /*
      * CREATE PROVIDER
      */
-    public function createProvider($access_token, $name, $ico, $dic, $icdph, $street, $city, $zip, $province, $state, $timezoneId, $defaultLanguage, $description, $phone, $email, $web, $timeBeforeReservation, $createReservationNotification, $updateReservationNotification, $deleteReservationNotification, $scope)
+          
+    public function __construct($name, $ico, $dic, $icdph, $street, $city, $zip, $province, $state, $timezoneId, $defaultLanguage, $description, $phone, $email, $web, $timeBeforeReservation, $createReservationNotification, $updateReservationNotification, $deleteReservationNotification, $scope)
+    {
+		$this->name = $name;
+		$this->ico = $ico;
+		$this->dic = $dic;
+		$this->icdph = $icdph;
+		$this->street = $street;
+		$this->city = $city;
+		$this->zip = $zip;
+		$this->province = $province;
+		$this->state = $state;
+		$this->timezoneId = $timezoneId;
+		$this->defaultLanguage = $defaultLanguage;
+		$this->description = $description;
+		$this->phone = $phone;
+		$this->email = $email;
+		$this->web = $web;
+		$this->timeBeforeReservation = $timeBeforeReservation;
+		$this->createReservationNotification = $createReservationNotification;
+		$this->updateReservationNotification = $updateReservationNotification;
+		$this->deleteReservationNotification = $deleteReservationNotification;
+		$this->scope = $scope;
+	
+	}
+		
+	public function create($access_token)
     {
         global $client_id;
         global $client_secret;
@@ -17,26 +42,26 @@ class BysProvider
         $client   = new BysClient();
         $url      = $client->setEnviromentURL() . "$part";
         $jsonData = array(
-            'name' => $name,
-            'ico' => $ico,
-            'dic' => $dic,
-            'icdph' => $icdph,
-            'street' => $street,
-            'city' => $city,
-            'zip' => $zip,
-            'province' => $province,
-            'state' => $state,
-            'timezoneId' => $timezoneId,
-            'defaultLanguage' => $defaultLanguage,
-            'description' => $description,
-            'phone' => $phone,
-            'email' => $email,
-            'web' => $web,
-            'timeBeforeReservation' => $timeBeforeReservation,
-            'createReservationNotification' => $createReservationNotification,
-            'updateReservationNotification' => $updateReservationNotification,
-            'deleteReservationNotification' => $deleteReservationNotification,
-            'scope' => $scope
+            'name' => $this->name,
+            'ico' => $this->ico,
+            'dic' => $this->dic,
+            'icdph' => $this->icdph,
+            'street' => $this->street,
+            'city' => $this->city,
+            'zip' => $this->zip,
+            'province' => $this->province,
+            'state' => $this->state,
+            'timezoneId' => $this->timezoneId,
+            'defaultLanguage' => $this->defaultLanguage,
+            'description' => $this->description,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'web' => $this->web,
+            'timeBeforeReservation' => $this->timeBeforeReservation,
+            'createReservationNotification' => $this->createReservationNotification,
+            'updateReservationNotification' => $this->updateReservationNotification,
+            'deleteReservationNotification' => $this->deleteReservationNotification,
+            'scope' => $this->scope
         );
         $json     = json_encode($jsonData);
         

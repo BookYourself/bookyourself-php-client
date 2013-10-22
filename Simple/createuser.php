@@ -9,17 +9,17 @@ session_start();
  */
 
 // Set value new user.
-$firstName     = "Fero";
-$lastName      = "Pejo";
-$email         = "m01056@testbys.eu";
+$firstName     = "Ján";
+$lastName      = "Novák";
+$email         = "m01060@testbys.eu";
 $password      = "123456";
 $passwordAgain = "123456";
 $phone         = "+123456";
 $activated     = true;
 
-$bysUser = new BysUser();
-// Call method "createUser" which return set value new user.
-$newUser = $bysUser->createUser($firstName, $lastName, $email, $password, $passwordAgain, $phone, $activated);
+$bysUser = new BysUser($firstName, $lastName, $email, $password, $passwordAgain, $phone, $activated);
+// Call method "create" which return set value new user.
+$newUser = $bysUser->create();
 
 if ($newUser[status] == true) {
     
@@ -35,7 +35,8 @@ if ($newUser[status] == true) {
         print "$newUser[firstName]<br />Last name: ";
         print "$newUser[lastName]<br />Phone: ";
         print "$newUser[phone]<br />Activated: ";
-        print "$newUser[activated]";
+        print "$newUser[activated]<br />Is new? ";
+        print "$newUser[isNew]";
         
         // Set scope new user.
         $scope = "logged_iframes+profile+manage_reservations";
@@ -56,6 +57,18 @@ if ($newUser[status] == true) {
     }
     
     else {
+		        // Shown return value user.
+        echo "New user created:<br/>";
+        echo "User ID: ";
+        print "$newUser[id]<br />Created At: ";
+        print "$newUser[createdAt]<br />Updated At: ";
+        print "$newUser[updatedAt]<br />Email: ";
+        print "$newUser[email]<br />First name: ";
+        print "$newUser[firstName]<br />Last name: ";
+        print "$newUser[lastName]<br />Phone: ";
+        print "$newUser[phone]<br />Activated: ";
+        print "$newUser[activated]<br />Is new? ";
+        print "$newUser[isNew]";
         
         $client = new BysClient();
         

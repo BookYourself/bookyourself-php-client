@@ -1,9 +1,7 @@
 <?php
 require_once 'bys-client.php';
-require_once 'bys-user.php';
 
 $client  = new BysClient();
-$bysUser = new BysUser();
 
 // Set values.
 $access_token = 'pHyrcMD0jvElsy6bCqtP5vHyZVmRkY2K';

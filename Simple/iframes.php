@@ -3,7 +3,6 @@
 // http://www.example.org/Simple/iframy.php?providerId=1749&accessToken=zqMmkcE2u6j71142bkWP4EnHLPpZhOPe&refreshToken=jBetgspEHnE7BidHWqa8vers56DEETpF&accessExpire=2282093757
 
 require_once '../bys-client.php';
-require_once '../bys-user.php';
 
 session_start();
 

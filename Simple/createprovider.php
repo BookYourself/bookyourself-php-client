@@ -6,7 +6,7 @@ require_once('../bys-provider.php');
  */
 
 // set acces token's client
-$access_token = "JVhkkQslUtmrZM3pdvt4DVMWfM6BcSho";
+$access_token = "l730DQZzp55V9K1f2udKkybiQINC3Dwk";
 
 // set provider values
 $name                          = "New provider";
@@ -24,16 +24,16 @@ $description                   = "description";
 $phone                         = "+0123456";
 $email                         = "example@example.org";
 $web                           = "bookyourself.com";
-$timeBeforeReservation         = 5600;
+$timeBeforeReservation         = 86400000;
 $createReservationNotification = true;
 $updateReservationNotification = true;
 $deleteReservationNotification = true;
-$scope                         = "provider_logged_iframes provider_profile provider_manage_reservations";
+$scope                         = "provider_profile provider_manage_profile provider_manage_reservations provider_logged_iframes";
 
 
-$bysProvider = new BysProvider();
-// call method "createProvider" which return save values
-$newProvider = $bysProvider->createProvider($access_token, $name, $ico, $dic, $icdph, $street, $city, $zip, $province, $state, $timezoneId, $defaultLanguage, $description, $phone, $email, $web, $timeBeforeReservation, $createReservationNotification, $updateReservationNotification, $deleteReservationNotification, $scope);
+$bysProvider = new BysProvider($name, $ico, $dic, $icdph, $street, $city, $zip, $province, $state, $timezoneId, $defaultLanguage, $description, $phone, $email, $web, $timeBeforeReservation, $createReservationNotification, $updateReservationNotification, $deleteReservationNotification, $scope);
+// call method "create" which return save values
+$newProvider = $bysProvider->create($access_token);
 
 if ($newProvider[status] == true) {
     

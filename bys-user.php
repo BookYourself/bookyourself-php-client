@@ -5,10 +5,22 @@ require_once("bys-client.php");
 
 class BysUser
 {
+	public function __construct($firstName, $lastName, $email, $password, $passwordAgain, $phone, $activated) 
+	{
+	$this->firstName = $firstName;
+	$this->lastName = $lastName;
+	$this->email = $email;
+	$this->password = $password;
+	$this->passwordAgain = $passwordAgain;
+	$this->phone = $phone;
+	$this->activated = $activated;
+	}
+	
+	
     /*
      * CREATE USER
      */
-    public function createUser($firstName, $lastName, $email, $password, $passwordAgain, $phone, $activated)
+    public function create()
     {
         global $client_id;
         global $client_secret;
@@ -16,13 +28,13 @@ class BysUser
         $client   = new BysClient();
         $url      = $client->setEnviromentURL() . "$part";
         $jsonData = array(
-            'firstName' => $firstName,
-            'lastName' => $lastName,
-            'email' => $email,
-            'password' => $password,
-            'passwordAgain' => $passwordAgain,
-            'phone' => $phone,
-            'activated' => $activated
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'email' => $this->email,
+            'password' => $this->password,
+            'passwordAgain' => $this->passwordAgain,
+            'phone' => $this->phone,
+            'activated' => $this->activated
         );
         $json     = json_encode($jsonData);
         
