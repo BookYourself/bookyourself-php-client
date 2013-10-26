@@ -1,5 +1,6 @@
 <?php
-require_once 'bys-client.php';
+require_once("./config.php");
+require_once '../bys-client.php';
 
 session_start();
 
@@ -16,17 +17,16 @@ if (isset($_GET['code'])) {
     // Call method "getTokens" with code what parameter. It's return tokens and expire time.
     $tokens = $client->getTokens($_GET['code']);
     // Control if Status Code did ok.
-    if ($tokens[status] == true) {
+    if ($tokens['status'] == true) {
         // Shown obtained values.
         echo 'access token: ';
-        echo $tokens[access_token];
+        echo $tokens['access_token'];
         echo '<br /> expires in: ';
-        echo $tokens[expires_in];
+        echo $tokens['expires_in'];
         echo '<br />refresh token: ';
-        echo $tokens[refresh_token];
-    } else {
-        echo error;
-    }
+        echo $tokens['refresh_token'];
+    } 
+    
 }
 
 // If session CODE is not set.
@@ -49,7 +49,7 @@ else {
     $redirect_uri = $client->createAuthUrl($scope, $state, $access_type, $response_type, $provider_id, $as_json);
     
     // Create link with Auth URL
-    print "<a class='login' href='$redirect_uri'>Connect Me!</a>";
+    print "<a class='login' href='" . $redirect_uri . "'>Connect Me!</a>";
 }
 
 ?>

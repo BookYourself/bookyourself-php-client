@@ -1,31 +1,37 @@
 <?php
-
 //Example URL:
 //http://www.example.org/Simple/deleteprovider.php?provider_id=1648&access_token=kKqEbj4Ry1MosUXSpB8QJBqDo5ytngrf
-
-require_once('../bys-provider.php');
+require_once("./config.php");
+require_once('../bys-client.php');
 
 session_start();
+
+$client = new BysClient();
 
 /*
  * DELETE PROVIDER
  */
 
 // First determine if session provider_id and access_token are set and aren't NULL. 
-if (isset($_GET['provider_id']) && isset($_GET['access_token'])) {
-    
-    // Next call method "deleteProvider" which return info if user did deleted.
-    $delete = new BysProvider();
-    $del    = $delete->deleteProvider($_GET['provider_id'], $_GET['access_token']);
-    
-    // Control returned value.
-    if ($del == 1) {
-        echo 'The user has been deleted.';
-    } else {
-        echo error;
-    }
-} else {
-    echo error;
+try {
+	if ($_GET['provider_id'] == null || $_GET['access_token'] == null) 
+	{
+		throw new Exception( 'Provider ID or Access token is null.' );
+	}
+	{
+		
+		// Next call method "deleteProvider" which return info if user did deleted.
+		$delete    = $client->deleteProvider($_GET['provider_id'], $_GET['access_token']);
+		
+		// Control returned value.
+		if ($delete == true) {
+			echo 'The user has been deleted.';
+		} 
+	} 
 }
+	catch (Exception $e) {
+			echo 'Error: '. $e->getMessage();
+			}
+
 
 ?>
