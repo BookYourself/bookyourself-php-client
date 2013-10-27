@@ -1,9 +1,10 @@
 <?php
 // Simple url:
-// http://phplibrary.funmoto.sk/Simple/createprovider.php?refresh_token=D4lIOmUX7c3jK6SyF4rhZEQtWe0bJ6jv
+// http://www.example.org/Simple/createprovider.php?refresh_token=D4lIOmUX7c3jK6SyF4rhZEQtWe0bJ6jv
 
 require_once('./config.php');
 require_once('../bys-client.php');
+require_once('../bys-provider.php');
 
 session_start();
 
@@ -14,9 +15,10 @@ $client = new BysClient();
  */
 
 // First determine if refresh token is set and is not NULL.
+// If no, throws an exception.
 try {
-    if ($_GET['refresh_token'] == null) {
-        throw new Exception('Refresh token value is null.');
+    if (empty($_GET['refresh_token'])) {
+        throw new Exception('Refresh token value is empty.');
     } {
         // call method changeTokens, help which change refresh token for access token
         $newAccessToken = $client->changeTokens($_GET['refresh_token']);
@@ -46,63 +48,73 @@ try {
         $deleteReservationNotification = true;
         $scope                         = "provider_profile provider_manage_profile provider_manage_reservations provider_logged_iframes";
         
+        $bysProvider = new BysProvider($name, $ico, $dic, $icdph, $street, $city, $zip, $province, $state, $timezoneId, $defaultLanguage, $description, $phone, $email, $web, $timeBeforeReservation, $createReservationNotification, $updateReservationNotification, $deleteReservationNotification, $scope);
         
         // call method "create" which return save values
-        $newProvider = $client->createProvider($access_token, $name, $ico, $dic, $icdph, $street, $city, $zip, $province, $state, $timezoneId, $defaultLanguage, $description, $phone, $email, $web, $timeBeforeReservation, $createReservationNotification, $updateReservationNotification, $deleteReservationNotification, $scope);
+        $newProvider = $bysProvider->create($access_token);
         
-        if ($newProvider[status] == 200) {
-            echo 'Provider id: ';
-            echo $newProvider['id'];
-            echo '<br /> Create At: ';
-            echo $newProvider['createdAt'];
-            echo '<br /> Updated At: ';
-            echo $newProvider['updatedAt'];
-            echo '<br />Name: ';
-            echo $newProvider['name'];
-            echo '<br />ico: ';
-            echo $newProvider['ico'];
-            echo '<br />dic: ';
-            echo $newProvider['dic'];
-            echo '<br />icdph: ';
-            echo $newProvider['icdph'];
-            echo '<br />Street: ';
-            echo $newProvider['street'];
-            echo '<br />City: ';
-            echo $newProvider['city'];
-            echo '<br />ZIP: ';
-            echo $newProvider['zip'];
-            echo '<br />Province: ';
-            echo $newProvider['province'];
-            echo '<br />State: ';
-            echo $newProvider['state'];
-            echo '<br />TimezoneId: ';
-            echo $newProvider['timezoneId'];
-            echo '<br />DefaultLanguage: ';
-            echo $newProvider['defaultLanguage'];
-            echo '<br />Description: ';
-            echo $newProvider['description'];
-            echo '<br />Phone: ';
-            echo $newProvider['phone'];
-            echo '<br />Email: ';
-            echo $newProvider['email'];
-            echo '<br />WEB: ';
-            echo $newProvider['web'];
-            echo '<br />UserId: ';
-            echo $newProvider['userId'];
-            echo '<br />Time before reservation: ';
-            echo $newProvider['timeBeforeReservation'];
-            echo '<br />Create reservation notifikation: ';
-            echo $newProvider['createReservationNotification'];
-            echo '<br />Update reservation notifikation: ';
-            echo $newProvider['updateReservationNotification'];
-            echo '<br />Delete reservation notifikation: ';
-            echo $newProvider['deleteReservationNotification'];
-            echo '<br />Acces token: ';
-            echo $newProvider['acces_token'];
-            echo '<br />Refresh token:';
-            echo $newProvider['refresh_token'];
-            echo '<br />Expire_in: ';
-            echo $newProvider['expire_in'];
+        // Determine if Status Code is 200. If no, throws an exception.
+        // If ok, shown get value.        
+        try {
+            if ($newProvider['status'] != 200) {
+                throw new Exception('Status Code is not 200.');
+            } {
+                echo 'Provider id: ';
+                echo $newProvider['id'];
+                echo '<br /> Create At: ';
+                echo $newProvider['createdAt'];
+                echo '<br /> Updated At: ';
+                echo $newProvider['updatedAt'];
+                echo '<br />Name: ';
+                echo $newProvider['name'];
+                echo '<br />ico: ';
+                echo $newProvider['ico'];
+                echo '<br />dic: ';
+                echo $newProvider['dic'];
+                echo '<br />icdph: ';
+                echo $newProvider['icdph'];
+                echo '<br />Street: ';
+                echo $newProvider['street'];
+                echo '<br />City: ';
+                echo $newProvider['city'];
+                echo '<br />ZIP: ';
+                echo $newProvider['zip'];
+                echo '<br />Province: ';
+                echo $newProvider['province'];
+                echo '<br />State: ';
+                echo $newProvider['state'];
+                echo '<br />TimezoneId: ';
+                echo $newProvider['timezoneId'];
+                echo '<br />DefaultLanguage: ';
+                echo $newProvider['defaultLanguage'];
+                echo '<br />Description: ';
+                echo $newProvider['description'];
+                echo '<br />Phone: ';
+                echo $newProvider['phone'];
+                echo '<br />Email: ';
+                echo $newProvider['email'];
+                echo '<br />WEB: ';
+                echo $newProvider['web'];
+                echo '<br />UserId: ';
+                echo $newProvider['userId'];
+                echo '<br />Time before reservation: ';
+                echo $newProvider['timeBeforeReservation'];
+                echo '<br />Create reservation notifikation: ';
+                echo $newProvider['createReservationNotification'];
+                echo '<br />Update reservation notifikation: ';
+                echo $newProvider['updateReservationNotification'];
+                echo '<br />Delete reservation notifikation: ';
+                echo $newProvider['deleteReservationNotification'];
+                echo '<br />Acces token: ';
+                echo $newProvider['acces_token'];
+                echo '<br />Refresh token:';
+                echo $newProvider['refresh_token'];
+                echo '<br />Expire_in: ';
+                echo $newProvider['expire_in'];
+            }
+        }
+        catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
         }
     }
 }

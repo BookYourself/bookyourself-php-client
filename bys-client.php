@@ -15,7 +15,7 @@ class BysClient
         $i = func_num_args();
         $f = '__construct1';
         
-        if ($i > 0) {
+        if ($i == 4) {
             call_user_func_array(array(
                 $this,
                 $f
@@ -31,7 +31,7 @@ class BysClient
                 global $BYS_redirect_uri;
                 global $BYS_enviroment;
                 
-                if ($BYS_client_id == null || $BYS_client_secret == null || $BYS_redirect_uri == null || $BYS_enviroment == null) {
+                if (empty($BYS_client_id) || empty($BYS_client_secret) || empty($BYS_redirect_uri) || empty($BYS_enviroment)) {
                     throw new Exception('Variables aren\'t set.');
                 } {
                     $bla = $this->__construct1($BYS_client_id, $BYS_client_secret, $BYS_redirect_uri, $BYS_enviroment);
@@ -44,15 +44,14 @@ class BysClient
             
         }
         
-        
     }
     
     public function __construct1($BYS_client_id, $BYS_client_secret, $BYS_redirect_uri, $BYS_enviroment)
     {
-        $this->client_id     = $BYS_client_id;
-        $this->client_secret = $BYS_client_secret;
-        $this->redirect_uri  = $BYS_redirect_uri;
-        $this->enviroment_url    = $BYS_enviroment;
+        $this->client_id      = $BYS_client_id;
+        $this->client_secret  = $BYS_client_secret;
+        $this->redirect_uri   = $BYS_redirect_uri;
+        $this->enviroment_url = $BYS_enviroment;
     }
     
     /*
@@ -96,22 +95,18 @@ class BysClient
         $toBody     = "client_id=" . $this->client_id . "&client_secret=" . $this->client_secret . "&grant_type=" . $grant_type . "&redirect_uri=" . $this->redirect_uri . "&code=" . $auth_code;
         
         $response = \Httpful\Request::post($url)->contentType("application/x-www-form-urlencoded")->body($toBody)->send();
-        
-        $status = $response->code;
-        try {
-            if ($status != 200) {
-                throw new Exception('Status Code is not 200.');
-            } {
-                $TokensAndExpTime = array(
-                    'status' => true,
-                    'access_token' => $response->body->access_token,
-                    'expires_in' => $response->body->expires_in,
-                    'refresh_token' => $response->body->refresh_token
-                );
-            }
-        }
-        catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
+
+        if ($response->code == 200) {
+            $TokensAndExpTime = array(
+                'status' => $response->code,
+                'access_token' => $response->body->access_token,
+                'expires_in' => $response->body->expires_in,
+                'refresh_token' => $response->body->refresh_token
+            );
+        } else {
+            $TokensAndExpTime = array(
+                'status' => $response->code
+            );
         }
         
         return $TokensAndExpTime;
@@ -132,21 +127,16 @@ class BysClient
             'client_secret' => $this->client_secret
         ))->contentType("application/x-www-form-urlencoded")->body($toBody)->send();
         
-        $status = $response->code;
-        try {
-            if ($status != 200) {
-                throw new Exception('Status Code is not 200.');
-            } {
-                $AccessTokenAndTime = array(
-                    status => true,
-                    access_token => $response->body->access_token,
-                    expires_in => $response->body->expires_in
-                );
-                
-            }
-        }
-        catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
+        if ($response->code == 200) {
+            $AccessTokenAndTime = array(
+                'status' => $response->code,
+                'access_token' => $response->body->access_token,
+                'expires_in' => $response->body->expires_in
+            );
+        } else {
+            $AccessTokenAndTime = array(
+                'status' => $response->code
+            );
         }
         
         return $AccessTokenAndTime;
@@ -162,7 +152,6 @@ class BysClient
         
         $UrlToIframe = $url . $type . "?providerId=" . $provider_id . "&client_id=" . $this->client_id . "&access_token=" . $access_token;
         
-        
         return $UrlToIframe;
     }
     
@@ -171,8 +160,6 @@ class BysClient
      */
     function createIframe($type, $provider_id, $access_token, $width, $height)
     {
-        $url = "https://www.testbys.eu/iframes/";
-        
         $UrlToIframe = $this->createUrlToIframe($type, $provider_id, $access_token);
         
         $createIframe = '<iframe src="' . $UrlToIframe . '" style="width:' . $width . 'px; height:' . $height . 'px;"><p>Your browser does not support iframes.</p></iframe>';
@@ -196,51 +183,50 @@ class BysClient
             'access_token' => $access_token
         ))->send();
         
-        $status = $response->code;
-        try {
-            if ($status != 200) {
-                throw new Exception('Status Code is not 200.');
-            } {
-                $count = array(
-                    'status' => true,
-                    'count' => $response->body->count
-                );
-            }
-        }
-        catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
+        if ($response->code == 200) {
+            $count = array(
+                'status' => $response->code,
+                'count' => $response->body->count
+            );
+        } else {
+            $count = array(
+                'status' => $response->code
+            );
         }
         
         return $count;
     }
     
-    public function createProvider($access_token, $name, $ico, $dic, $icdph, $street, $city, $zip, $province, $state, $timezoneId, $defaultLanguage, $description, $phone, $email, $web, $timeBeforeReservation, $createReservationNotification, $updateReservationNotification, $deleteReservationNotification, $scope)
+    /*
+     * CREATE PROVIDER
+     */
+    public function createProvider($newProvider, $access_token)
     {
         $part = "providers.json";
         
         $url = $this->setEnviromentURL() . "$part";
         
         $jsonData = array(
-            'name' => $name,
-            'ico' => $ico,
-            'dic' => $dic,
-            'icdph' => $icdph,
-            'street' => $street,
-            'city' => $city,
-            'zip' => $zip,
-            'province' => $province,
-            'state' => $state,
-            'timezoneId' => $timezoneId,
-            'defaultLanguage' => $defaultLanguage,
-            'description' => $description,
-            'phone' => $phone,
-            'email' => $email,
-            'web' => $web,
-            'timeBeforeReservation' => $timeBeforeReservation,
-            'createReservationNotification' => $createReservationNotification,
-            'updateReservationNotification' => $updateReservationNotification,
-            'deleteReservationNotification' => $deleteReservationNotification,
-            'scope' => $scope
+            'name' => $newProvider->name,
+            'ico' => $newProvider->ico,
+            'dic' => $newProvider->dic,
+            'icdph' => $newProvider->icdph,
+            'street' => $newProvider->street,
+            'city' => $newProvider->city,
+            'zip' => $newProvider->zip,
+            'province' => $newProvider->province,
+            'state' => $newProvider->state,
+            'timezoneId' => $newProvider->timezoneId,
+            'defaultLanguage' => $newProvider->defaultLanguage,
+            'description' => $newProvider->description,
+            'phone' => $newProvider->phone,
+            'email' => $newProvider->email,
+            'web' => $newProvider->web,
+            'timeBeforeReservation' => $newProvider->timeBeforeReservation,
+            'createReservationNotification' => $newProvider->createReservationNotification,
+            'updateReservationNotification' => $newProvider->updateReservationNotification,
+            'deleteReservationNotification' => $newProvider->deleteReservationNotification,
+            'scope' => $newProvider->scope
         );
         $json     = json_encode($jsonData);
         
@@ -251,54 +237,46 @@ class BysClient
             'access_token' => $access_token
         ))->contentType("application/json")->body("$json")->send();
         
-        $status = $response->code;
-        
-        try {
-            if ($status != 200) {
-                throw new Exception('Status Code is not 200.');
-            } {
-                
-                $createProvider = array(
-                    'status' => true,
-                    'id' => $response->body->id,
-                    'createdAt' => $response->body->createdAt,
-                    'updatedAt' => $response->body->updatedAt,
-                    'name' => $response->body->name,
-                    'ico' => $response->body->ico,
-                    'dic' => $response->body->dic,
-                    'icdph' => $response->body->icdph,
-                    'street' => $response->body->street,
-                    'city' => $response->body->city,
-                    'zip' => $response->body->zip,
-                    'province' => $response->body->province,
-                    'state' => $response->body->state,
-                    'timezoneId' => $response->body->timezoneId,
-                    'timezoneOffset' => $response->body->timezoneOffset,
-                    'summerTimeOffset' => $response->body->summerTimeOffset,
-                    'defaultLanguage' => $response->body->defaultLanguage,
-                    'description' => $response->body->description,
-                    'phone' => $response->body->phone,
-                    'email' => $response->body->email,
-                    'web' => $response->body->web,
-                    'userId' => $response->body->userId,
-                    'timeBeforeReservation' => $response->body->timeBeforeReservation,
-                    'createReservationNotification' => $response->body->createReservationNotification,
-                    'updateReservationNotification' => $response->body->updateReservationNotification,
-                    'deleteReservationNotification' => $response->body->deleteReservationNotification,
-                    'acces_token' => $response->body->access_token,
-                    'refresh_token' => $response->body->refresh_token,
-                    'expire_in' => $response->body->expires_in
-                    
-                );
-            }
-        }
-        
-        catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
+        if ($response->code == 200) {
+            
+            $createProvider = array(
+                'status' => $response->code,
+                'id' => $response->body->id,
+                'createdAt' => $response->body->createdAt,
+                'updatedAt' => $response->body->updatedAt,
+                'name' => $response->body->name,
+                'ico' => $response->body->ico,
+                'dic' => $response->body->dic,
+                'icdph' => $response->body->icdph,
+                'street' => $response->body->street,
+                'city' => $response->body->city,
+                'zip' => $response->body->zip,
+                'province' => $response->body->province,
+                'state' => $response->body->state,
+                'timezoneId' => $response->body->timezoneId,
+                'timezoneOffset' => $response->body->timezoneOffset,
+                'summerTimeOffset' => $response->body->summerTimeOffset,
+                'defaultLanguage' => $response->body->defaultLanguage,
+                'description' => $response->body->description,
+                'phone' => $response->body->phone,
+                'email' => $response->body->email,
+                'web' => $response->body->web,
+                'userId' => $response->body->userId,
+                'timeBeforeReservation' => $response->body->timeBeforeReservation,
+                'createReservationNotification' => $response->body->createReservationNotification,
+                'updateReservationNotification' => $response->body->updateReservationNotification,
+                'deleteReservationNotification' => $response->body->deleteReservationNotification,
+                'acces_token' => $response->body->access_token,
+                'refresh_token' => $response->body->refresh_token,
+                'expire_in' => $response->body->expires_in
+            );
+        } else {
+            $createProvider = array(
+                'status' => $response->code
+            );
         }
         
         return $createProvider;
-        
     }
     
     /*
@@ -315,9 +293,7 @@ class BysClient
             'access_token' => $access_token
         ))->send();
         
-        $status = $response->code;
-        
-        if ($status == 200) {
+        if ($response->code == 200) {
             $return = true;
         } else {
             $return = false;
@@ -330,18 +306,18 @@ class BysClient
     /*
      * CREATE USER
      */
-    public function createUser($firstName, $lastName, $email, $password, $passwordAgain, $phone, $activated)
+    public function createUser($newUser)
     {
         $part     = "users.json";
         $url      = $this->setEnviromentURL() . "$part";
         $jsonData = array(
-            'firstName' => $firstName,
-            'lastName' => $lastName,
-            'email' => $email,
-            'password' => $password,
-            'passwordAgain' => $passwordAgain,
-            'phone' => $phone,
-            'activated' => $activated
+            'firstName' => $newUser->firstName,
+            'lastName' => $newUser->lastName,
+            'email' => $newUser->email,
+            'password' => $newUser->password,
+            'passwordAgain' => $newUser->passwordAgain,
+            'phone' => $newUser->phone,
+            'activated' => $newUser->activated
         );
         $json     = json_encode($jsonData);
         
@@ -350,71 +326,97 @@ class BysClient
             'client_secret' => $this->client_secret
         ))->contentType("application/json")->body("$json")->send();
         
-        $status = $response->code;
-        try {
-            if ($status != 200) {
-                throw new Exception('Status Code is not 200.');
-            } {
-                $createUser = array(
-                    'status' => true,
-                    'id' => $response->body->id,
-                    'createdAt' => $response->body->createdAt,
-                    'updatedAt' => $response->body->updatedAt,
-                    'email' => $response->body->email,
-                    'firstName' => $response->body->firstName,
-                    'lastName' => $response->body->lastName,
-                    'phone' => $response->body->phone,
-                    'activated' => $response->body->activated,
-                    'isNew' => $response->body->isNew
-                );
-            }
+        if ($response->code == 200) {
+            $createUser = array(
+                'status' => $response->code,
+                'id' => $response->body->id,
+                'createdAt' => $response->body->createdAt,
+                'updatedAt' => $response->body->updatedAt,
+                'email' => $response->body->email,
+                'firstName' => $response->body->firstName,
+                'lastName' => $response->body->lastName,
+                'phone' => $response->body->phone,
+                'activated' => $response->body->activated,
+                'isNew' => $response->body->isNew
+            );
+        } else {
+            $createUser = array(
+                'status' => $response->code
+            );
         }
-        catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
-        
         
         return $createUser;
-        
     }
+    
+    /*
+     * ADD SCOPE
+     */
     
     public function addScope($scope, $email, $password)
     {
         $part = "oauth20/auth?scope=" . $scope . "&redirect_uri=" . $this->redirect_uri . "&response_type=code&as_json=true&client_id=" . $this->client_id;
         
-        $url = $this->setEnviromentURL() . "$part";
+        $url = $this->setEnviromentURL() . $part;
         
         $response = \Httpful\Request::post($url)->AddHeaders(array(
             'email' => $email,
             'password' => $password
         ))->contentType("application/x-www-form-urlencoded")->body('action=grant')->send();
         
-        $status = $response->code;
-        try {
-            if ($status != 200) {
-                throw new Exception('Status Code is not 200.');
-            } {
-                $code = array(
-                    'status' => true,
-                    'id' => $response->body->id,
-                    'userId' => $response->body->userId,
-                    'providerId' => $response->body->providerId,
-                    'appId' => $response->body->appId,
-                    'expire' => $response->body->expire,
-                    'type' => $response->body->type
-                );
-                
-            }
+        if ($response->code == 200) {
+            $result = array(
+                'status' => $response->code,
+                'id' => $response->body->id,
+                'userId' => $response->body->userId,
+                'providerId' => $response->body->providerId,
+                'appId' => $response->body->appId,
+                'expire' => $response->body->expire,
+                'type' => $response->body->type
+            );
+        } else {
+            $result = array(
+                'status' => $response->code
+            );
         }
-        catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
-  
-        return $code;
+        
+        return $result;
     }
-    
-}
 
+
+    /*
+     * CONTROL ACCESS TOKEN
+     */
+    public function controlAccessToken($token_id)
+    {
+        $part = "oauth20/tokeninfo?client_id=" . $this->client_id . "&client_secret=" . $this->client_secret . "&token_id=" . $token_id;
+        
+        $url = $this->setEnviromentURL() . $part;
+        
+        $response = \Httpful\Request::get($url)
+        ->contentType("application/x-www-form-urlencoded")
+        ->send();
+        
+        if ($response->code == 200) {
+            $result = array(
+                'status' => $response->code,
+                'id' => $response->body->id,
+                'userId' => $response->body->userId,
+                'providerId' => $response->body->providerId,
+                'appId' => $response->body->appId,
+                'expire' => $response->body->expire,
+                'type' => $response->body->type
+            );
+        } else {
+            $result = array(
+                'status' => $response->code
+            );
+        }
+        
+        return $result;
+    }
+
+
+}
 
 
 ?>

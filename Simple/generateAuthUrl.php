@@ -16,22 +16,28 @@ $client = new BysClient();
 if (isset($_GET['code'])) {
     // Call method "getTokens" with code what parameter. It's return tokens and expire time.
     $tokens = $client->getTokens($_GET['code']);
-    // Control if Status Code did ok.
-    if ($tokens['status'] == true) {
-        // Shown obtained values.
-        echo 'access token: ';
-        echo $tokens['access_token'];
-        echo '<br /> expires in: ';
-        echo $tokens['expires_in'];
-        echo '<br />refresh token: ';
-        echo $tokens['refresh_token'];
-    } 
     
+    // Control if Status Code did ok.
+    try {
+        if ($tokens['status'] != 200) {
+            throw new Exception('Status Code is not 200.');
+        } {
+            // Shown obtained values.
+            echo 'access token: ';
+            echo $tokens['access_token'];
+            echo '<br /> expires in: ';
+            echo $tokens['expires_in'];
+            echo '<br />refresh token: ';
+            echo $tokens['refresh_token'];
+        }
+    }
+    catch (Exception $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
 }
 
 // If session CODE is not set.
 else {
-    
     
     /**
      * CREATE AUTH URL
