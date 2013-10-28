@@ -2,7 +2,6 @@
 // Simple URL:
 // http://www.example.org/Simple/iframes.php?providerId=2054&accessToken=5IhGNvbuMFelppWz0EkFdW8AacGPSKg0&refreshToken=k0GSdkVqc1zBolWAtJI4VbynvoQfpF6C
 
-require_once("./config.php");
 require_once '../bys-client.php';
 
 session_start();

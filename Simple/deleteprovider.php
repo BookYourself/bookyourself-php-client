@@ -1,7 +1,7 @@
 <?php
 //Example URL:
 //http://www.example.org/Simple/deleteprovider.php?provider_id=1648&access_token=kKqEbj4Ry1MosUXSpB8QJBqDo5ytngrf
-require_once("./config.php");
+
 require_once('../bys-client.php');
 
 session_start();

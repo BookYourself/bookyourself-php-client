@@ -10,7 +10,6 @@ class BysClient
     
     public function __construct()
     {
-        
         $a = func_get_args();
         $i = func_num_args();
         $f = '__construct1';
@@ -23,13 +22,8 @@ class BysClient
         }
         
         else {
-            //require_once("./config.php");
-            
             try {
-                global $BYS_client_id;
-                global $BYS_client_secret;
-                global $BYS_redirect_uri;
-                global $BYS_enviroment;
+                require("./config.php");
                 
                 if (empty($BYS_client_id) || empty($BYS_client_secret) || empty($BYS_redirect_uri) || empty($BYS_enviroment)) {
                     throw new Exception('Variables aren\'t set.');
@@ -43,7 +37,6 @@ class BysClient
             }
             
         }
-        
     }
     
     public function __construct1($BYS_client_id, $BYS_client_secret, $BYS_redirect_uri, $BYS_enviroment)
@@ -57,7 +50,7 @@ class BysClient
     /*
      * SET ENVIROMENT
      */
-    function setEnviromentURL()
+    public function setEnviromentURL()
     {
         $dev        = "https://dev.testbys.eu/";
         $test       = "https://www.testbys.eu/";
@@ -75,7 +68,7 @@ class BysClient
     /*
      * CCREATE URL FOR AUTENTIFIKATION APP
      */
-    function createAuthUrl($scope, $state, $access_type, $response_type, $provider_id, $as_json)
+    public function createAuthUrl($scope, $state, $access_type, $response_type, $provider_id, $as_json)
     {
         $part = "oauth20/auth";
         $url  = $this->setEnviromentURL() . "$part";
@@ -87,7 +80,7 @@ class BysClient
     /*
      * WILL CHANGE ACQUIRED AUTHORIZATION CODE FOR ACCESS TOKEN, REFRESH TOKEN AND EXPIRATION TIME
      */
-    function getTokens($auth_code)
+    public function getTokens($auth_code)
     {
         $grant_type = "authorization_code";
         $part       = "oauth20/token";
@@ -95,7 +88,7 @@ class BysClient
         $toBody     = "client_id=" . $this->client_id . "&client_secret=" . $this->client_secret . "&grant_type=" . $grant_type . "&redirect_uri=" . $this->redirect_uri . "&code=" . $auth_code;
         
         $response = \Httpful\Request::post($url)->contentType("application/x-www-form-urlencoded")->body($toBody)->send();
-
+        
         if ($response->code == 200) {
             $TokensAndExpTime = array(
                 'status' => $response->code,
@@ -115,7 +108,7 @@ class BysClient
     /*
      * WILL CHANGE REFRESH TOKEN FOR ACCESS TOKEN
      */
-    function changeTokens($refresh_token)
+    public function changeTokens($refresh_token)
     {
         $part       = "oauth20/token";
         $url        = $this->setEnviromentURL() . "$part";
@@ -145,7 +138,7 @@ class BysClient
     /*
      * CREATE IFRAME URL
      */
-    function createUrlToIframe($type, $provider_id, $access_token)
+    public function createUrlToIframe($type, $provider_id, $access_token)
     {
         $part = "iframes/";
         $url  = $this->setEnviromentURL() . "$part";
@@ -158,7 +151,7 @@ class BysClient
     /*
      * CREATE FULL IFRAME
      */
-    function createIframe($type, $provider_id, $access_token, $width, $height)
+    public function createIframe($type, $provider_id, $access_token, $width, $height)
     {
         $UrlToIframe = $this->createUrlToIframe($type, $provider_id, $access_token);
         
@@ -171,7 +164,7 @@ class BysClient
     /*
      * FIND OLD RESERVATIONS
      */
-    function oldReservations($user_id, $provider_id, $startsBefore, $access_token)
+    public function oldReservations($user_id, $provider_id, $startsBefore, $access_token)
     {
         $part = "reservations.json?userId=" . $user_id . "&providerId=" . $provider_id . "&startsBefore=" . $startsBefore . "&limit=1";
         
@@ -381,8 +374,8 @@ class BysClient
         
         return $result;
     }
-
-
+    
+    
     /*
      * CONTROL ACCESS TOKEN
      */
@@ -392,9 +385,7 @@ class BysClient
         
         $url = $this->setEnviromentURL() . $part;
         
-        $response = \Httpful\Request::get($url)
-        ->contentType("application/x-www-form-urlencoded")
-        ->send();
+        $response = \Httpful\Request::get($url)->contentType("application/x-www-form-urlencoded")->send();
         
         if ($response->code == 200) {
             $result = array(
@@ -414,8 +405,6 @@ class BysClient
         
         return $result;
     }
-
-
 }
 
 

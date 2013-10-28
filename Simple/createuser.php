@@ -1,5 +1,4 @@
 <?php
-require_once('./config.php');
 require_once('../bys-client.php');
 require_once('../bys-user.php');
 

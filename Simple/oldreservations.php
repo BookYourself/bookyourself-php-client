@@ -2,7 +2,6 @@
 // Simple url:
 // http://www.example.org/Simple/oldreservations.php?access_token=D4lIOmUX7c3jK6SyF4rhZEQtWe0bJ6jv
 
-require_once('./config.php');
 require_once('../bys-client.php');
 
 $client = new BysClient();
