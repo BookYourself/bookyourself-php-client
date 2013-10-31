@@ -9,7 +9,7 @@ $client = new BysClient();
 // Set values.
 $user_id      = 2481;
 $provider_id  = 2047;
-$startsBefore = 1382900254;
+$startsBefore = 3392954807000;
 
 try {
     if (empty($_GET['access_token'])) {
