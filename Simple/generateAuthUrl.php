@@ -1,6 +1,7 @@
 <?php
 
 require_once '../bys-client.php';
+require_once('./config.php');
 
 session_start();
 
