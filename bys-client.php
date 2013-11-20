@@ -1,6 +1,6 @@
 <?php
-if(file_exists ( dirname(__FILE__)."/httpful.phar" )) {
-	require_once(dirname(__FILE__)."/httpful.phar");
+if (file_exists(dirname(__FILE__) . "/httpful.phar")) {
+    require_once(dirname(__FILE__) . "/httpful.phar");
 }
 
 class BysClient
@@ -25,14 +25,14 @@ class BysClient
         
         else {
             try {
-                if(file_exists ( dirname(__FILE__)."/config.php" )) {
-					require_once(dirname(__FILE__)."/config.php");
-				} else {
-				global $BYS_client_id;
-				global $BYS_client_secret;
-				global $BYS_redirect_uri;
-				global $BYS_enviroment;
-				}
+                if (file_exists(dirname(__FILE__) . "/config.php")) {
+                    require_once(dirname(__FILE__) . "/config.php");
+                } else {
+                    global $BYS_client_id;
+                    global $BYS_client_secret;
+                    global $BYS_redirect_uri;
+                    global $BYS_enviroment;
+                }
                 
                 if (empty($BYS_client_id) || empty($BYS_client_secret) || empty($BYS_redirect_uri) || empty($BYS_enviroment)) {
                     throw new Exception('Variables aren\'t set.');
