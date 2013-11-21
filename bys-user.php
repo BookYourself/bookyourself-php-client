@@ -1,5 +1,5 @@
 <?php
-require_once("../bys-client.php");
+require_once(dirname(__FILE__) . "/bys-client.php");
 
 class BysUser
 {
