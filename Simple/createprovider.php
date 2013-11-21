@@ -2,7 +2,6 @@
 // Simple url:
 // http://www.example.org/Simple/createprovider.php?refresh_token=D4lIOmUX7c3jK6SyF4rhZEQtWe0bJ6jv
 
-require_once('../bys-client.php');
 require_once('../bys-provider.php');
 require_once('./config.php');
 
