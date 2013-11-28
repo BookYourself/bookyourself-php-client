@@ -5,12 +5,21 @@ $BYS_client_secret = "CLIENT_SECRET";
 $BYS_redirect_uri  = "CLIENT_URI";
 
 /*
- * SET ONE ENVIROMENT
+ * Set one of enviroments:
+ * * dev
+ * * test
+ * * production
  */
 
-//$BYS_enviroment = "dev"; 
-//$BYS_enviroment = "test";
-//$BYS_enviroment = "production";
+$BYS_enviroment = "test";
+
+/*
+ * Set one of possible languages:
+ * * sk
+ * * en - default
+ */
+
+$BYS_language = "en"; 
 
 
 ?>

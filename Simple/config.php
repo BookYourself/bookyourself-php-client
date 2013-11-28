@@ -13,5 +13,13 @@ $BYS_enviroment = "test";
 //$BYS_enviroment = "production";
 
 
+/*
+ * Set one of possible languages:
+ * * sk
+ * * en - default
+ */
+
+$BYS_language = "sk"; 
+
 
 ?>

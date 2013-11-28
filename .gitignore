@@ -1,1 +1,9 @@
 *~
+
+# ignore config
+config.php
+
+
+# remove vim temp files
+.*swp
+
