@@ -9,6 +9,7 @@ class BysClient
     private $client_secret;
     private $redirect_uri;
     private $enviroment_url;
+    private $language;
     
     public function __construct()
     {
@@ -16,14 +17,12 @@ class BysClient
         $i = func_num_args();
         $f = '__construct1';
         
-        if ($i == 4) {
+        if ($i == 5) {
             call_user_func_array(array(
                 $this,
                 $f
             ), $a);
-        }
-        
-        else {
+        } else {
             try {
                 if (file_exists(dirname(__FILE__) . "/config.php")) {
                     require_once(dirname(__FILE__) . "/config.php");
@@ -32,12 +31,13 @@ class BysClient
                     global $BYS_client_secret;
                     global $BYS_redirect_uri;
                     global $BYS_enviroment;
+                    global $BYS_language;
                 }
                 
                 if (empty($BYS_client_id) || empty($BYS_client_secret) || empty($BYS_redirect_uri) || empty($BYS_enviroment)) {
                     throw new Exception('Variables aren\'t set.');
                 } {
-                    $bla = $this->__construct1($BYS_client_id, $BYS_client_secret, $BYS_redirect_uri, $BYS_enviroment);
+                    $bla = $this->__construct1($BYS_client_id, $BYS_client_secret, $BYS_redirect_uri, $BYS_enviroment, $BYS_language);
                     
                 }
             }
@@ -48,12 +48,17 @@ class BysClient
         }
     }
     
-    public function __construct1($BYS_client_id, $BYS_client_secret, $BYS_redirect_uri, $BYS_enviroment)
+    public function __construct1($BYS_client_id, $BYS_client_secret, $BYS_redirect_uri, $BYS_enviroment, $BYS_language)
     {
         $this->client_id      = $BYS_client_id;
         $this->client_secret  = $BYS_client_secret;
         $this->redirect_uri   = $BYS_redirect_uri;
         $this->enviroment_url = $BYS_enviroment;
+        if(!empty($BYS_language)){
+            $this->language = $BYS_language;
+        } else {
+            $this->language = "en";
+        }
     }
     
     /*
@@ -61,17 +66,34 @@ class BysClient
      */
     public function setEnviromentURL()
     {
-        $dev        = "https://dev.testbys.eu/";
-        $test       = "https://www.testbys.eu/";
-        $production = "https://www.bookyourself.com/api/";
-        
-        if ($this->enviroment_url == "dev")
-            return $dev;
-        if ($this->enviroment_url == "test")
-            return $test;
-        if ($this->enviroment_url == "production")
-            return $dev;
-        
+        if ($this->enviroment_url == "dev"){
+            $url = "https://{lang}.dev.testbys.eu/";
+        } else if ($this->enviroment_url == "test") {
+            $url = "https://{lang}.testbys.eu/";
+        } else {
+            $url = "https://www.bookyourself.{lang}/api/";
+        }
+
+        /**
+         * replace {lang} placeholder for language alias for setted language
+         */
+        $url = str_replace("{lang}", $this->getLanguageAlias($this->language), $url);
+
+        return $url;
+    }
+
+    /**
+     * Get language alias
+     */
+    private function getLanguageAlias($language){
+        /**
+         * if language has alias, return alias, else return language
+         */
+        if($language == "en"){
+            return "com";
+        }
+
+        return $language;
     }
     
     /*
