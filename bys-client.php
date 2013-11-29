@@ -17,14 +17,12 @@ class BysClient
         $i = func_num_args();
         $f = '__construct1';
         
-        if ($i == 4) {
+        if ($i == 5) {
             call_user_func_array(array(
                 $this,
                 $f
             ), $a);
-        }
-        
-        else {
+        } else {
             try {
                 if (file_exists(dirname(__FILE__) . "/config.php")) {
                     require_once(dirname(__FILE__) . "/config.php");
