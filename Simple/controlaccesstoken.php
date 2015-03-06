@@ -1,6 +1,6 @@
 <?php
 // Simple url:
-// http://www.example.org/Simple/ccontrolaccesstoken.php?access_token=D4lIOmUX7c3jK6SyF4rhZEQtWe0bJ6jv
+// http://www.example.org/Simple/controlaccesstoken.php?access_token=D4lIOmUX7c3jK6SyF4rhZEQtWe0bJ6jv
 
 require_once("../bys-client.php");
 require_once("./config.php");

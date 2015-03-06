@@ -25,7 +25,7 @@ class BysClient
         } else {
             try {
                 if (file_exists(dirname(__FILE__) . "/config.php")) {
-                    require_once(dirname(__FILE__) . "/config.php");
+                    require(dirname(__FILE__) . "/config.php");
                 } else {
                     global $BYS_client_id;
                     global $BYS_client_secret;
@@ -145,12 +145,12 @@ class BysClient
         $url        = $this->setEnviromentURL() . "$part";
         $grant_type = "refresh_token";
         $toBody     = "client_id=" . $this->client_id . "&client_secret=" . $this->client_secret . "&grant_type=" . $grant_type . "&redirect_uri=" . $this->redirect_uri . "&refresh_token=" . $refresh_token;
-        
+
         $response = \Httpful\Request::post($url)->AddHeaders(array(
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret
         ))->contentType("application/x-www-form-urlencoded")->body($toBody)->send();
-        
+
         if ($response->code == 200) {
             $AccessTokenAndTime = array(
                 'status' => $response->code,
@@ -229,7 +229,7 @@ class BysClient
         $part = "providers.json";
         
         $url = $this->setEnviromentURL() . "$part";
-        
+
         $jsonData = array(
             'name' => $newProvider->name,
             'ico' => $newProvider->ico,
@@ -250,7 +250,11 @@ class BysClient
             'createReservationNotification' => $newProvider->createReservationNotification,
             'updateReservationNotification' => $newProvider->updateReservationNotification,
             'deleteReservationNotification' => $newProvider->deleteReservationNotification,
-            'scope' => $newProvider->scope
+            'scope' => $newProvider->scope,
+            'Cache-Control' => 'no-cache',
+            'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret,
+            'access_token' => $access_token
         );
         $json     = json_encode($jsonData);
         
@@ -310,13 +314,20 @@ class BysClient
     {
         $part = "providers/$id_provider.json";
         $url  = $this->setEnviromentURL() . "$part";
+
+        $jsonData = array(
+			'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret,
+            'access_token' => $access_token
+        );
+        $json     = json_encode($jsonData);
         
         $response = \Httpful\Request::delete($url)->AddHeaders(array(
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'access_token' => $access_token
-        ))->send();
-        
+        ))->contentType("application/json")->body("$json")->send();
+
         if ($response->code == 200) {
             $return = true;
         } else {
@@ -341,7 +352,9 @@ class BysClient
             'password' => $newUser->password,
             'passwordAgain' => $newUser->passwordAgain,
             'phone' => $newUser->phone,
-            'activated' => $newUser->activated
+            'activated' => $newUser->activated,
+            'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret
         );
         $json     = json_encode($jsonData);
         

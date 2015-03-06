@@ -11,7 +11,7 @@ session_start();
 // Set value new user.
 $firstName     = "Ján";
 $lastName      = "Novák";
-$email         = "m01j2j750@testbys.eu";
+$email         = "m01j2j750784@testbys.eu";
 $password      = "123456";
 $passwordAgain = "123456";
 $phone         = "+12345678";
@@ -52,7 +52,7 @@ try {
             
             
             // Set scope new user.
-            $scope = "logged_iframes+profile+manage_reservations";
+            $scope = "logged_iframes+profile+manage_reservations+manage_providers+manage_profile";
             
             // Call method "addScope" which return autentification code, which exchange for tokens.
             $getCode = $client->addScope($scope, $email, $password);
