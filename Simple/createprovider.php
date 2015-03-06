@@ -18,13 +18,13 @@ $client = new BysClient();
 try {
     if (empty($_GET['refresh_token'])) {
         throw new Exception('Refresh token value is empty.');
-    } {
+    } else {
         // call method changeTokens, help which change refresh token for access token
         $newAccessToken = $client->changeTokens($_GET['refresh_token']);
         
         // set new access_token to variable
         $access_token = $newAccessToken['access_token'];
-        
+
         // set provider values
         $name                          = "New Provider";
         $ico                           = "12345678";
@@ -57,7 +57,7 @@ try {
         try {
             if ($newProvider['status'] != 200) {
                 throw new Exception('Status Code is not 200.');
-            } {
+            } else {
                 echo 'Provider id: ';
                 echo $newProvider['id'];
                 echo '<br /> Create At: ';
